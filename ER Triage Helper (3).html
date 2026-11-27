@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ER Triage Helper</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff3b8;--card:#fffdf0;--ink:#4b3a57;--mute:#85748f;--pink:#ffc9dd;--mint:#c5ecd3;--sky:#c6e2ff;--lav:#dccfff;--peach:#ffd8bd;--butter:#ffe98a;--red:#e5547a;--line:#ecd98a;--old:#9a8aa8;--ok:#2f9e7a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2b2233;--card:#382d42;--ink:#f7ecd0;--mute:#bfaecb;--pink:#6b3d57;--mint:#2f5a49;--sky:#2f4e72;--lav:#4d4377;--peach:#6b4a3a;--butter:#6b5a24;--red:#ff7fa3;--line:#54456a;--old:#8f7fa0;--ok:#6fdcb4}}
+:root[data-theme="dark"]{--bg:#2b2233;--card:#382d42;--ink:#f7ecd0;--mute:#bfaecb;--pink:#6b3d57;--mint:#2f5a49;--sky:#2f4e72;--lav:#4d4377;--peach:#6b4a3a;--butter:#6b5a24;--red:#ff7fa3;--line:#54456a;--old:#8f7fa0;--ok:#6fdcb4}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Nunito,system-ui,sans-serif}
+h1,h2,h3,.f{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;margin:0}
+header{max-width:1100px;margin:0 auto;padding:28px 18px 8px}
+h1{font-size:clamp(32px,6vw,54px);line-height:1.05}
+h1 span{display:inline-block;background:var(--pink);border-radius:18px;padding:0 14px;transform:rotate(-2deg)}
+.tag{color:var(--mute);max-width:60ch;margin:10px 0 16px}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav button{font:600 15px Nunito,sans-serif;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+nav button[aria-pressed=true]{background:var(--lav);border-color:var(--ink)}
+main{max-width:1100px;margin:0 auto;padding:12px 18px 60px}
+button:focus-visible,input:focus-visible,select:focus-visible,[data-p]:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:18px;margin-top:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.g3{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+@media(max-width:720px){.g2{grid-template-columns:1fr}}
+h2{font-size:24px;margin:8px 0 2px}h3{font-size:18px;margin-bottom:8px}.sub{color:var(--mute);margin:0 0 6px;max-width:64ch}
+.btn{font:600 15px Nunito,sans-serif;background:var(--ink);color:var(--card);border:0;border-radius:999px;padding:9px 18px;cursor:pointer}
+.ctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.ctl input[type=range]{flex:1;min-width:140px;accent-color:var(--red)}
+select,input[type=number],input[type=text]{font:inherit;padding:6px 10px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
+.row{display:flex;gap:10px;align-items:center;padding:8px 6px;border-top:1px dashed var(--line);border-radius:12px}.row:first-child{border-top:0}
+[data-p]{cursor:pointer}[data-p]:hover{background:var(--butter)}
+.grow{flex:1;min-width:0}.s{font-size:13px;color:var(--mute)}.b{font-weight:700}
+.chip{display:inline-block;border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin:2px 4px 2px 0;background:var(--sky)}
+.c-pink{background:var(--pink)}.c-mint{background:var(--mint)}.c-lav{background:var(--lav)}.c-peach{background:var(--peach)}.c-butter{background:var(--butter)}
+.sb{min-width:30px;text-align:center;border-radius:10px;padding:1px 6px;font-weight:700;background:var(--mint)}.sb.m{background:var(--butter)}.sb.h{background:var(--peach)}.sb.x{background:var(--red);color:#fff}
+.big{font:600 clamp(26px,4.5vw,40px)/1.1 Fredoka,sans-serif;margin-top:20px}.big em{font-style:normal;background:var(--mint);border-radius:12px;padding:0 10px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed var(--line)}.kv b{font-variant-numeric:tabular-nums}
+svg{display:block;max-width:100%}.sc{overflow-x:auto}
+.bar{height:12px;border-radius:6px;background:var(--lav);min-width:3px}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;color:var(--mute);font-weight:600;padding:6px}td{padding:6px;border-top:1px dashed var(--line)}
+tr[data-p]{cursor:pointer}
+#modal{position:fixed;inset:0;background:rgba(40,25,50,.55);display:none;align-items:flex-start;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 14px 20px;overflow:auto;z-index:20}
+#modal.on{display:flex}#mc{background:var(--card);border:3px solid var(--ink);border-radius:28px;max-width:720px;width:100%;padding:20px}
+.x{float:right}.hint{background:var(--butter);border-radius:14px;padding:8px 12px;font-size:14px;margin-top:10px}
+@media(prefers-reduced-motion:no-preference){nav button{transition:background .15s}}
+:root{--bg:#efe6da;--card:#f8f2e9;--ink:#2b1d16;--mute:#7a6556;--pink:#ead2c6;--mint:#d5dcc6;--sky:#d3dbd9;--lav:#ddd2cf;--peach:#ecd3b5;--butter:#e8d9a8;--red:#a8402d;--line:#d6c4b0;--old:#8b7868;--ok:#4f7a4a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b130f;--card:#271b15;--ink:#f1e4d3;--mute:#b49d89;--pink:#4a2f27;--mint:#3a4030;--sky:#2f3b3a;--lav:#3d322d;--peach:#5a3d2a;--butter:#5a4a22;--red:#e0795f;--line:#45332a;--old:#9b8473;--ok:#a9c9a0}}
+:root[data-theme="dark"]{--bg:#1b130f;--card:#271b15;--ink:#f1e4d3;--mute:#b49d89;--pink:#4a2f27;--mint:#3a4030;--sky:#2f3b3a;--lav:#3d322d;--peach:#5a3d2a;--butter:#5a4a22;--red:#e0795f;--line:#45332a;--old:#9b8473;--ok:#a9c9a0}
+body,button,input,select{font-family:"DM Sans",system-ui,sans-serif}
+h1,h2,h3,.f,.big{font-family:Fraunces,Georgia,serif!important;font-weight:500;letter-spacing:-.01em}
+h1{font-size:clamp(34px,6vw,58px)}h1 span{transform:none;background:none;padding:0;border-radius:0;border-bottom:3px solid var(--red)}
+.card{border-radius:14px;border-width:1px}#mc{border-radius:16px;border-width:1px}
+nav button,.btn,select,input[type=number],input[type=text]{border-radius:8px}nav button[aria-pressed=true]{background:var(--ink);color:var(--card)}
+.chip{border-radius:6px}.sb{border-radius:6px}.big em{border-radius:6px;background:var(--butter)}.hint{border-radius:8px}
+svg [stroke="#4b3a57"]{stroke:var(--ink)}
+</style></head><body>
+<header><h1><span>ER Triage</span> Helper <span style="display:none">🌼</h1>
+<p class="tag">A pretend hospital shift. Sick patients get a risk score, the minor cases go to a fast-track corner, and you can watch it all happen.</p>
+<nav id="nav"></nav></header>
+<main id="app"></main>
+<div id="modal"><div id="mc"></div></div>
+<script>
+(()=>{
+const $=i=>document.getElementById(i);
+let S={docs:2,nurses:2,treat:10,fast:5,hours:7.5,alert:9,rate:15,sickPct:20,minorPct:30,det:100,seed:7,shift:0,ev:2,wv:100,wt:4,wc:2};
+const K=Object.keys(S),SH=['Morning 6am–2pm','Afternoon 2pm–10pm','Night 10pm–6am'],SHS=[6,14,22];
+const SL=[['docs','ER doctors',1,6,1],['nurses','Fast-track nurses',1,6,1],['treat','Minutes per emergency patient',4,25,1],['fast','Minutes per minor patient',2,15,1],['hours','Hours open (7.5 = 450 min)',2,24,.25],['alert','Alert score',5,14,1],['rate','Patients arriving per hour',6,30,1],['sickPct','Seriously sick (%)',5,50,1],['minorPct','Minor cases (%)',0,70,1],['det','How fast sick patients worsen (%)',50,300,10],['ev','Surprise events per shift',0,4,1],['wv','Score: weight of vital signs (%)',0,200,25],['wt','Score: max points for waiting time',0,8,1],['wc','Score: max points for past conditions',0,4,1]];
+const mk=a=>()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const ri=(r,a,b)=>a+Math.floor(r()*(b-a+1)),ru=(r,a,b)=>a+r()*(b-a),pk=(r,a)=>a[Math.floor(r()*a.length)];
+const FN='Maya Noor Ali Sofia Liam Zara Omar Ivy Hugo Amira Leo Priya Jonah Fatima Theo Mei Sam Nadia Ravi Clara Eli Hana Diego Tara Ben Lina Yusuf Rosa Kai Anya'.split(' '),LN='Khan Rivera Chen Okafor Silva Haddad Nguyen Brooks Patel Novak Ahmed Lopez Tanaka Murphy Rossi Sato Malik Costa Ivanov Reyes'.split(' ');
+const COND=['Type 2 diabetes','Hypertension','Asthma','Heart disease','COPD','Kidney disease','Epilepsy','Penicillin allergy'],HR=['Type 2 diabetes','Heart disease','COPD','Kidney disease','Asthma'];
+const CCE=['Sprained ankle','Deep cut needing stitches','Migraine','Abdominal pain','Back pain','Fever and cough','Broken finger','Kidney stone pain'],CCS=['Chest tightness','Trouble breathing','Severe infection','Dizziness and fainting','Possible stroke symptoms'],CCM=['Paper cut, needs a bandage','Injection (brought their own)','Small scrape','Dressing change','Vaccine shot (brought their own)','Blood pressure check','Insect bite'];
+const PREV=['Chest pain check','Asthma flare-up','Sprained wrist','High fever','Stitches','Allergic reaction'],NOTE=['Sent home the same day','Given antibiotics','Told to follow up with their GP','Watched overnight','Prescribed an inhaler'];
+const DS=['Emergency Medicine','Cardiology','Trauma Surgery','Pediatrics','Neurology','Pulmonology','Internal Medicine'],NS=['Triage Nursing','Wound Care','Injections and Vaccines','Pediatric Nursing','Critical Care Nursing','Emergency Nursing'];
+const SKIN=['#f6d5b8','#e8b98f','#c68d62','#8d5a3b','#f3c9a6'],HAIR=['#3b2a20','#6b4226','#c9a227','#1e1e24','#b5532f','#9aa0a6'],BG=['#ffc9dd','#c5ecd3','#c6e2ff','#dccfff','#ffd8bd','#ffe98a'];
+const av=(n,z,coat)=>{const r=mk(n+11),sk=pk(r,SKIN),h=pk(r,HAIR),b=pk(r,BG),long=r()<.5;return`<svg width="${z}" height="${z}" viewBox="0 0 40 40" aria-hidden="true" style="flex:none"><circle cx="20" cy="20" r="20" fill="${b}"/>${long?`<rect x="8" y="12" width="24" height="22" rx="10" fill="${h}"/>`:''}<path d="M6 40c0-9 6-12 14-12s14 3 14 12z" fill="${coat?'#fff':pk(r,BG)}" stroke="${coat?'#c3b8cf':'none'}"/><circle cx="20" cy="21" r="10" fill="${sk}"/><path d="M10 19c0-9 20-9 20 0c-4-4-14-4-20 0z" fill="${h}"/><circle cx="16.5" cy="22" r="1.3" fill="#3b2a20"/><circle cx="23.5" cy="22" r="1.3" fill="#3b2a20"/><path d="M16.5 26q3.5 3 7 0" fill="none" stroke="#a5524a" stroke-width="1.3" stroke-linecap="round"/>${coat?'<path d="M18 32h4M20 30v4" stroke="#e5547a" stroke-width="1.6"/>':''}</svg>`};
+let ST={};
+const staff=sh=>{if(ST[sh])return ST[sh];const r=mk(900+sh*77),o={d:[],n:[]};for(let i=0;i<6;i++){let a=ri(r,31,62);o.d.push({name:'Dr. '+pk(r,FN)+' '+pk(r,LN),age:a,spec:pk(r,DS),yrs:a-27-ri(r,0,3),a:ri(r,0,9999)});a=ri(r,24,58);o.n.push({name:'Nurse '+pk(r,FN)+' '+pk(r,LN),age:a,spec:pk(r,NS),yrs:a-22-ri(r,0,3),a:ri(r,0,9999)})}return ST[sh]=o};
+let EV=[];
+const gen=()=>{const r=mk(S.seed),r2=mk(S.seed*7+3),P=[],H=S.hours*60;let id=0;EV=[];
+for(let i=0;i<S.ev;i++)EV.push({k:i%3,t:ri(r2,20,Math.max(21,H-45))});
+for(let now=0;now<H;now++){if(r()<S.rate/60){id++;P.push(mkP(r,id,now))}
+EV.forEach(e=>{if(e.k==0&&e.t==now)for(let j=0;j<3;j++){id++;P.push(mkP(r2,id,now,1))}})}
+EV.forEach(e=>{if(e.k==2){const q=P.find(p=>!p.minor&&p.arrive>=e.t);if(q){q.crash=q.arrive+ri(r2,8,20);e.id=q.id}}});return P};
+const mkP=(r,id,now,f)=>{const minor=!f&&r()<S.minorPct/100,sick=f||(!minor&&r()<S.sickPct/100),age=minor?ri(r,4,80):sick?ri(r,45,90):ri(r,3,75);
+const p={id,arrive:now,minor,sick,age,sex:r()<.5?'F':'M',name:pk(r,FN)+' '+pk(r,LN),av:ri(r,0,9999)};
+if(sick){p.hr=ri(r,100,125);p.ox=ru(r,91,94);p.bp=ri(r,95,115);p.temp=ru(r,37.5,39.5)}else{p.hr=ri(r,60,95);p.ox=ru(r,96,100);p.bp=ri(r,110,135);p.temp=ru(r,36.2,37.6)}
+p.sugar=sick?ri(r,110,320):ri(r,72,140);p.cond=COND.filter(()=>r()<age/250+(sick?.15:0));if(p.cond.includes(COND[0]))p.sugar+=60;
+p.wt=age<14?ri(r,15,50):ri(r,50,110);p.ht=age<14?ri(r,100,155):ri(r,150,190);
+p.cc=pk(r,minor?CCM:sick?CCS:CCE);p.ret=[];if(r()<.3){const n=ri(r,1,2);for(let i=0;i<n;i++)p.ret.push({ago:ri(r,2,400)+' days ago',why:pk(r,PREV),note:pk(r,NOTE)})}return p};
+const vit=(p,t,e)=>{const m=Math.min(t,e==null?t:e),n=p.sick?Math.max(0,(m-p.arrive+1))*S.det/100:0,c=p.crash!=null&&m>=p.crash?1:0;return{hr:p.hr+.25*n+15*c,ox:p.ox-.15*n-4*c,bp:p.bp-.2*n-15*c}};
+const sc=(p,t,e,L)=>{const v=vit(p,t,e);let s=0;const a=(l,x)=>{if(/^(Heart|Oxygen|Blood pressure|Temp)/.test(l))x=Math.round(x*S.wv/100);s+=x;L&&x&&L.push([l,x])};
+a('Heart rate '+Math.round(v.hr),v.hr>130||v.hr<40?3:v.hr>110||v.hr<50?2:v.hr>100?1:0);
+a('Oxygen '+v.ox.toFixed(0)+'%',v.ox<90?3:v.ox<93?2:v.ox<95?1:0);
+a('Blood pressure '+Math.round(v.bp),v.bp<90?3:v.bp<100?2:v.bp>180?1:0);
+a('Temperature '+p.temp.toFixed(1)+' °C',p.temp>39.5||p.temp<35?2:p.temp>38?1:0);
+a('Age '+p.age,p.age>=75||p.age<=2?2:p.age>=60?1:0);
+a('Blood sugar '+p.sugar,p.sugar<70||p.sugar>250?2:p.sugar>180?1:0);
+a('Past conditions',Math.min(S.wc,p.cond.filter(c=>HR.includes(c)).length));
+a('Time waiting',Math.min(S.wt,Math.floor(((e==null?t:Math.min(t,e))-p.arrive)/15)));return{t:s,v}};
+let P=[],R={};
+const run=mode=>{const st={},fin={},who={},al=[],q=[],last={},alr={},wq=[],fq=[],dF=Array(S.docs).fill(-1),nF=Array(S.nurses).fill(-1);let i=0;
+for(let now=0;now<S.hours*60;now++){
+while(i<P.length&&P[i].arrive===now){(P[i].minor?fq:wq).push(P[i]);i++}
+if(mode==='smart')wq.forEach(p=>{const s=sc(p,now).t,j=last[p.id]!==undefined&&s-last[p.id]>=3;if((s>=S.alert&&!alr[p.id])||j){alr[p.id]=1;al.push({t:now,id:p.id,s})}last[p.id]=s});
+for(let k=0;k<S.docs&&wq.length;k++)if(dF[k]<=now&&!(k==0&&EV.some(e=>e.k==1&&now>=e.t&&now<e.t+25))){let n=wq[0];if(mode==='smart'){let b=-1;wq.forEach(p=>{const s=sc(p,now).t;if(s>b){b=s;n=p}})}wq.splice(wq.indexOf(n),1);st[n.id]=now;fin[n.id]=now+S.treat;who[n.id]=k;dF[k]=now+S.treat}
+for(let k=0;k<S.nurses&&fq.length;k++)if(nF[k]<=now){const n=fq.shift();st[n.id]=now;fin[n.id]=now+S.fast;who[n.id]=k;nF[k]=now+S.fast}
+q.push([wq.length,fq.length])}
+return{st,fin,who,al,q}};
+const FNAME=['Age','Heart rate','Oxygen','Blood pressure','Temperature','Blood sugar','BMI','Serious conditions'];
+const feat=p=>[p.age,p.hr,p.ox,p.bp,p.temp,p.sugar,p.wt/Math.pow(p.ht/100,2),p.cond.filter(c=>HR.includes(c)).length];
+const lab=p=>{const t=p.arrive+60;return sc(p,t).t>=S.alert+2||vit(p,t).ox<88?1:0};
+let MD=null;
+const train=()=>{const r=mk(4242),X=[],Y=[];for(let i=0;i<900;i++){const p=mkP(r,i+1,0);if(p.minor)continue;X.push(feat(p));Y.push(lab(p))}
+const n=X.length,d=8,mu=Array(d).fill(0),sd=Array(d).fill(0);X.forEach(x=>x.forEach((v,j)=>mu[j]+=v/n));X.forEach(x=>x.forEach((v,j)=>sd[j]+=(v-mu[j])**2/n));for(let j=0;j<d;j++)sd[j]=Math.sqrt(sd[j])||1;
+const Z=X.map(x=>x.map((v,j)=>(v-mu[j])/sd[j]));let w=Array(d).fill(0),b=0;
+for(let e=0;e<300;e++){const g=Array(d).fill(0);let gb=0;Z.forEach((z,i)=>{const er=1/(1+Math.exp(-(b+z.reduce((s,v,j)=>s+v*w[j],0))))-Y[i];z.forEach((v,j)=>g[j]+=er*v/n);gb+=er/n});w=w.map((v,j)=>v-.5*(g[j]+.001*v));b-=.5*gb}
+MD={w,b,mu,sd,n,pos:Y.reduce((a,c)=>a+c,0)}};
+const zc=p=>feat(p).map((v,j)=>(v-MD.mu[j])/MD.sd[j]*MD.w[j]);
+const prob=p=>1/(1+Math.exp(-(MD.b+zc(p).reduce((a,c)=>a+c,0))));
+const band=q=>q>=.6?'High risk':q>=.2?'Medium risk':'Low risk';
+const aib=p=>{const q=prob(p);return`<span class="sb ${q>=.6?'x':q>=.2?'h':''}">${Math.round(q*100)}%</span>`};
+const aiSec=p=>{const q=prob(p),c=zc(p).map((v,j)=>[FNAME[j],v]).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1])).slice(0,3);return`<h3 style="margin-top:14px">AI classification</h3>${kv('Chance of turning critical within 1 hour of waiting',Math.round(q*100)+'% ('+band(q)+')')}${c.map(a=>kv('Pushing '+(a[1]>0?'risk up':'risk down')+': '+a[0],(a[1]>0?'+':'')+a[1].toFixed(2))).join('')}`};
+const clsTab=()=>{const E=P.filter(p=>!p.minor),T=E.map(p=>[prob(p)>=.5?1:0,lab(p)]),c=(a,b)=>T.filter(x=>x[0]==a&&x[1]==b).length,tp=c(1,1),fp=c(1,0),fn=c(0,1),tn=c(0,0),n=T.length||1,
+fw=FNAME.map((nm,j)=>[nm,MD.w[j]]).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1])),mw=Math.max(...fw.map(x=>Math.abs(x[1])))||1,top=E.slice().sort((a,b)=>prob(b)-prob(a)).slice(0,8);
+const cell=(v,l,bg)=>`<div class="card" style="margin:0;padding:12px;text-align:center;background:var(--${bg})"><div class="big" style="margin:0">${v}</div><div class="s">${l}</div></div>`;
+return`<h2>Classification model</h2><p class="sub">A small logistic regression model learns from simulated patients to predict who will turn critical if they wait an hour. It sorts every emergency patient into low, medium or high risk, using only what is known at arrival.</p>
+<div class="g2"><section class="card"><h3>How well it works on this shift</h3>${kv('Trained on',MD.n+' simulated patients ('+MD.pos+' critical)')}${kv('Tested on',E.length+' patients from this shift')}${kv('Accuracy',((tp+tn)/n*100).toFixed(0)+'%')}${kv('Critical patients it caught',(tp+fn?tp/(tp+fn)*100:0).toFixed(0)+'%')}${kv('Its warnings that were right',(tp+fp?tp/(tp+fp)*100:0).toFixed(0)+'%')}</section>
+<section class="card"><h3>Confusion matrix</h3><div class="g2" style="gap:8px">${cell(tp,'Correctly flagged as critical','mint')}${cell(fn,'Critical but missed','pink')}${cell(fp,'False alarm','butter')}${cell(tn,'Correctly cleared','sky')}</div></section></div>
+<div class="card"><h3>What the model pays attention to</h3>${fw.map(x=>`<div class="ctl" style="gap:8px"><span style="width:150px">${x[0]}</span><div class="bar" style="width:${Math.abs(x[1])/mw*55}%;background:var(--${x[1]>0?'red':'ok'})"></div><span class="s">${x[1]>0?'raises':'lowers'} risk (${x[1].toFixed(2)})</span></div>`).join('')}</div>
+<div class="card"><h3>Highest predicted risk this shift</h3>${top.map(p=>`<div class="row" data-p="${p.id}" tabindex="0">${av(p.av,34)}<div class="grow"><b>${p.name}</b> <span class="s">${p.cc}</span></div>${aib(p)}</div>`).join('')||'<div class="s">No emergency patients.</div>'}</div>
+<div class="hint">Important: the model learns from patients made by the same simulation, so it is learning this made-up ER, not real medicine. It is a demonstration of how a classifier works, not a clinical tool. Sudden collapses cannot be predicted from arrival data, so they show up as misses.</div>`};
+const go=()=>{P=gen();train();R={fifo:run('fifo'),smart:run('smart')}};
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0,w=(m,p)=>m.st[p.id]-p.arrive;
+const crit=(m,p)=>{const t=m.st[p.id];return sc(p,t,t).t>=S.alert+2||vit(p,t,t).ox<88};
+const stats=m=>{const e=P.filter(p=>!p.minor&&m.st[p.id]!=null),s=e.filter(p=>p.sick),f=P.filter(p=>p.minor&&m.st[p.id]!=null);
+return{n:e.length,all:avg(e.map(p=>w(m,p))),sick:avg(s.map(p=>w(m,p))),max:s.length?Math.max(...s.map(p=>w(m,p))):0,min:avg(f.map(p=>w(m,p))),nm:f.length,still:P.filter(p=>p.sick&&m.st[p.id]==null).length,crit:s.filter(p=>crit(m,p)).length}};
+const clock=t=>{const m=SHS[S.shift]*60+t;return String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+const bc=(s)=>s>=S.alert?'x':s>=6?'h':s>=4?'m':'',badge=s=>`<span class="sb ${bc(s)}">${s}</span>`;
+const kv=(a,b)=>`<div class="kv"><span>${a}</span><b>${b}</b></div>`;
+let tab=0,t=0,mode='smart',spd=3,tm=null,pf='all',tests=null;
+const TABS=['🎬 Live board','📊 Results','🧑 Patients','👩‍⚕️ Staff','🎲 Many shifts','⚖️ Fairness','🎛️ Build your ER'];
+TABS.push('🤖 Classifier');const nav=()=>{$('nav').innerHTML=TABS.map(x=>x.replace(/^\P{L}+/u,'')).map((x,i)=>`<button data-t="${i}" aria-pressed="${i==tab}">${x}</button>`).join('')};
+const stop=()=>{clearInterval(tm);tm=null};
+/* LIVE BOARD */
+const board=()=>`<div class="card"><div class="ctl"><button class="btn" id="pl">${tm?'Pause':'Play'}</button><input type="range" id="sc" min="0" max="${S.hours*60-1}" value="${t}" aria-label="Minute of the shift"><span class="f" id="ck"></span>
+<select id="md" aria-label="Method"><option value="smart" ${mode=='smart'?'selected':''}>Risk score</option><option value="fifo" ${mode=='fifo'?'selected':''}>First come, first served</option></select>
+<select id="sp" aria-label="Speed">${[1,3,10,30].map(x=>`<option value="${x}" ${x==spd?'selected':''}>${x} min/tick</option>`).join('')}</select></div><div class="s" style="margin-top:6px">Click any patient to open their file. Shift: ${SH[S.shift]}.</div></div><div id="bb"></div>`;
+const evb=()=>EV.filter(e=>t>=e.t&&t<e.t+25).map(e=>`<div class="hint" style="background:var(--pink)">${['🚨 Ambulance arrived: 3 seriously sick patients at once','🩺 Doctor 1 called away to a ward for 25 minutes','⚡ A waiting patient has suddenly collapsed'][e.k]}</div>`).join('');
+const mapSvg=(W,F,m,cur)=>{const dot=(p,x,y,e)=>{const s=e?sc(p,t).t:0,c=!e?'#8fae8b':s>=S.alert?'#c0432f':s>=6?'#d98a4f':s>=4?'#d9b86a':'#8fae8b';return`<circle data-p="${p.id}" cx="${x}" cy="${y}" r="7" fill="${c}" stroke="#4b3a57" stroke-width="1.5" style="cursor:pointer"><title>${p.name}</title></circle>`};
+const g=(L,y0,e)=>L.slice(0,60).map((p,i)=>dot(p,26+(i%14)*20,y0+Math.floor(i/14)*20,e)).join('');
+const bay=(n,mi,x0,c)=>Array.from({length:n},(_,i)=>{const p=cur(mi,i),y=34+i*40;return`<rect x="${x0}" y="${y}" width="96" height="34" rx="10" style="fill:var(--${c})" stroke="#4b3a57"/><text x="${x0+8}" y="${y+21}" font-size="12" style="fill:var(--ink)">${mi?'Nurse':'Dr'} ${i+1}</text>${p?dot(p,x0+78,y+17,0):''}`}).join('');
+const rm=(x,y,w,h,c,l)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" style="fill:var(--${c})" stroke="#4b3a57" stroke-width="2"/><text x="${x+14}" y="${y+20}" font-size="13" font-weight="700" style="fill:var(--ink)">${l}</text>`;
+return`<div class="card sc"><h3>🗺️ Hospital floor</h3><svg viewBox="0 0 640 290" style="min-width:560px" role="img" aria-label="Hospital floor map">${rm(8,8,310,130,'pink','Emergency waiting ('+W.length+')')}${g(W,52,1)}${rm(8,150,310,130,'mint','Fast-track waiting ('+F.length+')')}${g(F,194,0)}${rm(334,8,150,274,'butter','Emergency bays')}${bay(S.docs,false,361,'pink')}${rm(494,8,140,274,'sky','Fast-track bays')}${bay(S.nurses,true,516,'mint')}</svg><div class="s">Dot colors: green is low risk, yellow and orange are rising, pink is at alert level. Click a dot to open the file.</div></div>`};
+const soon=W=>{const L=W.filter(p=>sc(p,t).t<S.alert&&sc(p,t+15).t>=S.alert);return L.slice(0,4).map(p=>`<div class="row" data-p="${p.id}" tabindex="0">${badge(sc(p,t).t)}<div class="grow"><b>${p.name}</b> <span class="s">on track to reach ${S.alert}+ within 15 min</span></div></div>`).join('')||'<div class="s">Nobody is about to cross the alert line.</div>'};
+const bb=()=>{const m=R[mode],sf=staff(S.shift);$('ck').textContent=clock(t);$('sc').value=t;
+const out=p=>!(m.st[p.id]<=t),W=P.filter(p=>!p.minor&&p.arrive<=t&&out(p)),F=P.filter(p=>p.minor&&p.arrive<=t&&out(p));
+if(mode=='smart')W.sort((a,b)=>sc(b,t).t-sc(a,t).t||a.arrive-b.arrive);
+const cur=(mi,i)=>P.find(p=>p.minor===mi&&m.who[p.id]===i&&m.st[p.id]<=t&&t<m.fin[p.id]);
+const sRow=(s,p,mi)=>`<div class="row">${av(s.a,38,1)}<div class="grow"><div class="b">${s.name}</div><div class="s">${s.spec}</div></div>${p?`<span class="chip c-pink" data-p="${p.id}" tabindex="0">with ${p.name.split(' ')[0]}, ${m.fin[p.id]-t} min left</span>`:'<span class="chip c-mint">Free</span>'}</div>`;
+const pRow=(p,e)=>`<div class="row" data-p="${p.id}" tabindex="0">${av(p.av,36)}<div class="grow"><div class="b">${p.name}${p.ret.length?' <span class="chip c-lav">Returning</span>':''}</div><div class="s">${p.cc} · waited ${t-p.arrive} min</div></div>${e?badge(sc(p,t).t):''}</div>`;
+const al=m.al.filter(a=>a.t<=t).slice(-4).reverse();
+$('bb').innerHTML=evb()+mapSvg(W,F,m,cur)+`<div class="g2"><section class="card" style="background:var(--pink)"><h2>🚑 Emergency</h2><div class="s">${W.length} waiting · ${S.docs} doctors on</div>${sf.d.slice(0,S.docs).map((s,i)=>sRow(s,cur(false,i))).join('')}</section>
+<section class="card" style="background:var(--mint)"><h2>🩹 Fast-track (non-emergency)</h2><div class="s">${F.length} waiting · ${S.nurses} nurses on · bandages, injections, quick checks</div>${sf.n.slice(0,S.nurses).map((s,i)=>sRow(s,cur(true,i))).join('')}</section></div>
+<div class="g2"><section class="card"><h3>Emergency waiting room ${mode=='smart'?'(highest risk first)':'(in arrival order)'}</h3>${W.slice(0,8).map(p=>pRow(p,1)).join('')||'<div class="s">Nobody waiting.</div>'}${W.length>8?`<div class="s">…and ${W.length-8} more</div>`:''}</section>
+<section class="card"><h3>Fast-track waiting room</h3>${F.slice(0,5).map(p=>pRow(p)).join('')||'<div class="s">Nobody waiting.</div>'}<h3 style="margin-top:14px">🔔 Alerts to staff</h3>${mode=='fifo'?'<div class="s">Alerts only run in risk score mode.</div>':al.map(a=>{const p=P[a.id-1];return`<div class="row" data-p="${p.id}" tabindex="0">${badge(a.s)}<div class="grow"><b>${p.name}</b> <span class="s">${p.cc}, min ${a.t}</span></div></div>`}).join('')||'<div class="s">No alerts yet.</div>'}<h3 style="margin-top:14px">⏳ Early warning (next 15 min)</h3>${soon(W)}</section></div>`};
+/* RESULTS */
+const chart=(a,b,id)=>{const W=800,H=200,L=34,B=22,T=8,n=a.length,m=Math.max(5,...a,...b);const ln=(d,c)=>`<polyline fill="none" stroke="${c}" stroke-width="2.4" stroke-linejoin="round" points="${d.map((v,i)=>(L+i/(n-1||1)*(W-L-6)).toFixed(1)+','+(H-B-v/m*(H-B-T)).toFixed(1)).join(' ')}"/>`;let g='';
+for(let k=0;k<=4;k++){const v=Math.round(m*k/4),y=H-B-v/m*(H-B-T);g+=`<line x1="${L}" x2="${W}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${L-6}" y="${y+4}" text-anchor="end" font-size="11" fill="var(--mute)">${v}</text>`}
+const hs=Math.round(n/60),sp=Math.max(1,Math.ceil(hs/8));for(let h=0;h<=hs;h+=sp)g+=`<text x="${L+h*60/(n-1||1)*(W-L-6)}" y="${H-5}" text-anchor="middle" font-size="11" fill="var(--mute)">${h}h</text>`;
+return`<div class="sc"><svg viewBox="0 0 ${W} ${H}" style="min-width:520px" role="img" aria-label="Waiting patients over time">${g}${ln(a,'var(--old)')}${ln(b,'var(--red)')}</svg></div><div class="s"><b style="color:var(--old)">●</b> First come, first served &nbsp; <b style="color:var(--red)">●</b> Risk score</div>`};
+const card=(n,s,c)=>`<section class="card" style="background:var(--${c})"><h3>${n}</h3>${kv('Emergency patients seen',s.n)}${kv('Average wait, all emergency',s.all.toFixed(1)+' min')}${kv('Average wait, sick patients',s.sick.toFixed(1)+' min')}${kv('Longest sick wait',s.max+' min')}${kv('Sick still waiting at close',s.still)}${kv('Sick who turned critical before being seen',s.crit)}${kv('Fast-track: seen / avg wait',s.nm+' / '+s.min.toFixed(1)+' min')}</section>`;
+const results=()=>{const a=stats(R.fifo),b=stats(R.smart),d=a.sick-b.sick;
+return`<div class="big">${d>0&&a.sick>0?`Sick patients wait <em>${d.toFixed(1)} min less</em>, ${Math.round(d/a.sick*100)}% better.`:'No clear gain in this run. Try another seed.'}</div>
+<div class="g2">${card('First come, first served',a,'peach')}${card('Risk score',b,'sky')}</div>
+<div class="card"><h3>Emergency waiting room over the shift</h3>${chart(R.fifo.q.map(x=>x[0]),R.smart.q.map(x=>x[0]))}</div>
+<div class="card"><h3>First ${Math.min(8,R.smart.al.length)} of ${R.smart.al.length} alerts</h3>${R.smart.al.slice(0,8).map(x=>{const p=P[x.id-1];return`<div class="row" data-p="${p.id}" tabindex="0">${badge(x.s)}<div class="grow"><b>${p.name}</b> <span class="s">needs attention · ${p.cc} · min ${x.t}</span></div></div>`}).join('')||'<div class="s">No alerts. Lower the alert score.</div>'}</div>`};
+/* PATIENTS */
+const pats=()=>{const f={all:()=>1,er:p=>!p.minor,minor:p=>p.minor,sick:p=>p.sick,ret:p=>p.ret.length}[pf],L=P.filter(f);
+const wt=(m,p)=>m.st[p.id]==null?'–':w(m,p)+' min';
+return`<h2>Patients (${L.length})</h2><div class="ctl">${[['all','Everyone'],['er','Emergency'],['minor','Fast-track'],['sick','Seriously sick'],['ret','Returning']].map(x=>`<button class="btn" data-f="${x[0]}" style="${pf==x[0]?'':'opacity:.5'}">${x[1]}</button>`).join('')}</div>
+<div class="card sc"><table><tr><th></th><th>Name</th><th>Seen for</th><th>Dept</th><th>Arrived</th><th>Wait: first come</th><th>Wait: risk score</th><th>AI risk</th></tr>${L.slice(0,150).map(p=>`<tr data-p="${p.id}" tabindex="0"><td>${av(p.av,30)}</td><td><b>${p.name}</b>${p.ret.length?' <span class="chip c-lav">Returning</span>':''}</td><td>${p.cc}</td><td>${p.minor?'Fast-track':p.sick?'Emergency, sick':'Emergency'}</td><td>${clock(p.arrive)}</td><td>${wt(R.fifo,p)}</td><td>${wt(R.smart,p)}</td><td>${p.minor?'–':aib(p)}</td></tr>`).join('')}</table>${L.length>150?'<div class="s">Showing the first 150.</div>':''}</div>`};
+const outc=(m,p)=>{const t=m.st[p.id];if(t==null)return'Not seen before closing';if(p.minor)return'Treated and sent home';const s=sc(p,t,t).t;return crit(m,p)?'Critical: sent to intensive care':s>=S.alert?'Admitted to hospital':'Treated and sent home'};
+const modal=id=>{const p=P[id-1],H=S.hours*60,es=R.smart.st[id],ef=R.fifo.st[id],L=[],cs=sc(p,es==null?H:es,es,L),bmi=p.wt/Math.pow(p.ht/100,2);
+const end=Math.min(H-1,p.arrive+120,(es==null?H:es)+0),pts=[];for(let x=p.arrive;x<=Math.max(p.arrive+1,end);x++)pts.push(sc(p,x,es).t);const mx=Math.max(S.alert+1,...pts),n=pts.length;
+const xy=(i,v)=>(10+i/(n-1||1)*580).toFixed(0)+','+(120-v/mx*105).toFixed(0);
+$('mc').innerHTML=`<button class="btn x" data-close="1">Close</button><div class="ctl">${av(p.av,84)}<div><h2>${p.name}</h2><div class="s">Patient #${p.id} · ${p.age} years · ${p.sex==='F'?'Female':'Male'} · arrived ${clock(p.arrive)}</div><span class="chip ${p.minor?'c-mint':'c-pink'}">${p.minor?'Fast-track':'Emergency'}</span>${p.sick?'<span class="chip c-peach">Seriously sick</span>':''}${p.ret.length?'<span class="chip c-lav">Returning patient</span>':''}</div></div>
+<h3 style="margin-top:14px">What’s happening right now</h3><div>${p.cc}</div>
+<h3 style="margin-top:14px">Vitals on arrival</h3><div class="g3" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${[['Heart rate',Math.round(p.hr)+' bpm'],['Oxygen',p.ox.toFixed(0)+'%'],['Blood pressure',Math.round(p.bp)],['Temperature',p.temp.toFixed(1)+' °C'],['Blood sugar',p.sugar+' mg/dL'],['Weight',p.wt+' kg'],['Height',p.ht+' cm'],['BMI',bmi.toFixed(1)]].map(x=>`<div class="chip c-butter" style="border-radius:14px;padding:6px 10px"><div class="s">${x[0]}</div><b>${x[1]}</b></div>`).join('')}</div>
+<h3 style="margin-top:14px">Conditions on file</h3>${p.cond.map(c=>`<span class="chip c-peach">${c}</span>`).join('')||'<span class="s">None on file.</span>'}
+<h3 style="margin-top:14px">Past visits</h3>${p.ret.length?`<div class="hint">We already have their file, so past conditions and visits are counted in the score.</div>`+p.ret.map(r=>`<div class="kv"><span>${r.ago}: ${r.why}</span><span class="s">${r.note}</span></div>`).join(''):'<div class="s">First visit. A new file was created.</div>'}
+${p.minor?'':`<h3 style="margin-top:14px">Score breakdown (${badge(cs.t)} when seen)</h3>${L.map(x=>kv(x[0],'+'+x[1])).join('')}<div class="sc"><svg viewBox="0 0 600 135" style="min-width:420px" role="img" aria-label="Score while waiting"><line x1="10" x2="600" y1="${120-S.alert/mx*105}" y2="${120-S.alert/mx*105}" stroke="var(--red)" stroke-dasharray="4"/><text x="12" y="${115-S.alert/mx*105}" font-size="11" fill="var(--red)">alert at ${S.alert}</text><polyline fill="none" stroke="var(--ink)" stroke-width="2.4" points="${pts.map((v,i)=>xy(i,v)).join(' ')}"/></svg></div><div class="s">Score from arrival until a doctor sees them (risk score method).</div>`}
+${p.minor?'':aiSec(p)}<h3 style="margin-top:14px">How long they waited</h3>${kv('First come, first served',ef==null?'Not seen':ef-p.arrive+' min')}${kv('Risk score',es==null?'Not seen':es-p.arrive+' min')}<h3 style="margin-top:14px">What happened next</h3>${kv('First come, first served',outc(R.fifo,p))}${kv('Risk score',outc(R.smart,p))}${p.crash!=null?'<div class="hint">⚡ This patient suddenly collapsed in the waiting room.</div>':''}`;$('modal').classList.add('on')};
+/* STAFF */
+const staffTab=()=>{const o=staff(S.shift),cnt=(m,mi,i)=>P.filter(p=>p.minor===mi&&m.who[p.id]===i&&m.st[p.id]!=null).length;
+const c=(s,i,mi)=>`<div class="card" style="margin:0;background:var(--${mi?'mint':'pink'})"><div class="ctl">${av(s.a,64,1)}<div><div class="f">${s.name}</div><div class="s">Age ${s.age} · ${s.yrs} years working</div></div></div><div style="margin-top:8px"><span class="chip c-lav">${s.spec}</span><span class="chip c-butter">${mi?'Fast-track':'Emergency'}</span></div><div class="s">Treated this shift: ${cnt(R.smart,mi,i)} patients (risk score day)</div></div>`;
+return`<h2>Who’s working</h2><p class="sub">Pick a shift. The people on duty are the ones treating patients in the live board. Change doctor and nurse numbers in “Build your ER”.</p><div class="ctl">${SH.map((x,i)=>`<button class="btn" data-sh="${i}" style="${S.shift==i?'':'opacity:.5'}">${x}</button>`).join('')}</div>
+<h3 style="margin-top:18px">Doctors (${S.docs})</h3><div class="g3">${o.d.slice(0,S.docs).map((s,i)=>c(s,i,false)).join('')}</div><h3 style="margin-top:18px">Nurses (${S.nurses})</h3><div class="g3">${o.n.slice(0,S.nurses).map((s,i)=>c(s,i,true)).join('')}</div><div class="s" style="margin-top:12px">Faces are illustrated avatars. Names and specialties are made up.</div>`};
+/* MANY SHIFTS */
+const many=()=>{if(!tests)return`<h2>Is it luck?</h2><p class="sub">Runs 60 different shifts (60 seeds starting from yours) with your settings and compares both methods.</p><button class="btn" id="rt">Run 60 shifts</button>`;
+const d=tests,av2=avg(d.map(x=>x.d)),mxb=Math.max(...d.map(x=>x.d)),mnb=Math.min(...d.map(x=>x.d)),worse=d.filter(x=>x.d<0).length,bk=Array(8).fill(0),sp=(mxb-mnb)||1;d.forEach(x=>bk[Math.min(7,Math.floor((x.d-mnb)/sp*8))]++);const mb=Math.max(...bk);
+return`<h2>Results from 60 shifts</h2><div class="big">On average sick patients wait <em>${av2.toFixed(1)} min less</em></div><div class="card">${kv('Best shift',mxb.toFixed(1)+' min saved')}${kv('Worst shift',mnb.toFixed(1)+' min')}${kv('Shifts where it was worse',worse+' of 60')}${kv('Average sick wait: first come',avg(d.map(x=>x.a)).toFixed(1)+' min')}${kv('Average sick wait: risk score',avg(d.map(x=>x.b)).toFixed(1)+' min')}</div>
+<div class="card"><h3>How the savings were spread</h3>${bk.map((c,i)=>`<div class="ctl" style="gap:8px"><span class="s" style="width:90px">${(mnb+sp*i/8).toFixed(0)} to ${(mnb+sp*(i+1)/8).toFixed(0)}</span><div class="bar" style="width:${c/mb*70}%"></div><span class="s">${c}</span></div>`).join('')}</div><button class="btn" id="rt" style="margin-top:12px">Run again</button>`};
+const runMany=()=>{const sv=S.seed,out=[];for(let i=0;i<60;i++){S.seed=sv+i;P=gen();const a=stats(run('fifo')),b=stats(run('smart'));if(a.sick||b.sick)out.push({a:a.sick,b:b.sick,d:a.sick-b.sick})}S.seed=sv;go();tests=out;draw()};
+/* FAIRNESS */
+const fair=()=>{const lo=P.filter(p=>!p.minor&&!p.sick),sk=P.filter(p=>p.sick),f=(m,L)=>avg(L.filter(p=>m.st[p.id]!=null).map(p=>w(m,p))),mx=(m,L)=>Math.max(0,...L.filter(p=>m.st[p.id]!=null).map(p=>w(m,p))),o60=(m,L)=>L.filter(p=>m.st[p.id]==null||w(m,p)>60).length,wo=sk.filter(p=>R.smart.st[p.id]!=null&&R.fifo.st[p.id]!=null&&R.smart.st[p.id]>R.fifo.st[p.id]).length;
+const df=f(R.smart,lo)-f(R.fifo,lo);
+return`<h2>Is it fair?</h2><p class="sub">Jumping sick patients ahead can push lower-risk patients back. Here is the cost.</p><div class="g2"><section class="card"><h3>Lower-risk emergency patients (${lo.length})</h3>${kv('Avg wait, first come',f(R.fifo,lo).toFixed(1)+' min')}${kv('Avg wait, risk score',f(R.smart,lo).toFixed(1)+' min')}${kv('Longest wait, first come',mx(R.fifo,lo)+' min')}${kv('Longest wait, risk score',mx(R.smart,lo)+' min')}${kv('Waited over 1 hour or never seen: first come',o60(R.fifo,lo))}${kv('Waited over 1 hour or never seen: risk score',o60(R.smart,lo))}</section>
+<section class="card"><h3>Seriously sick patients (${sk.length})</h3>${kv('Avg wait, first come',f(R.fifo,sk).toFixed(1)+' min')}${kv('Avg wait, risk score',f(R.smart,sk).toFixed(1)+' min')}${kv('Sick patients who waited longer with risk score',wo)}${kv('Not seen by close: first come',sk.filter(p=>R.fifo.st[p.id]==null).length)}${kv('Not seen by close: risk score',sk.filter(p=>R.smart.st[p.id]==null).length)}</section></div>
+<div class="hint">${df>0?`Lower-risk patients wait about ${df.toFixed(1)} min longer on average. The waiting-time bonus (up to +4) is what stops them waiting forever.`:'In this run lower-risk patients did not wait longer on average.'} Fast-track patients are not affected: they have their own nurses.</div>`};
+/* SETTINGS */
+const code=()=>K.map(k=>S[k]).join('.');
+const sett=()=>`<h2>Build your ER</h2><p class="sub">Change anything and every tab updates.</p><div class="card">${SL.map(s=>`<div class="ctl"><label for="s_${s[0]}" style="width:240px">${s[1]}: <b id="v_${s[0]}">${S[s[0]]}</b></label><input type="range" id="s_${s[0]}" data-k="${s[0]}" min="${s[2]}" max="${s[3]}" step="${s[4]}" value="${S[s[0]]}"></div>`).join('')}
+<div class="ctl" style="margin-top:8px"><label>Random seed <input type="number" id="sd" min="1" max="99999" value="${S.seed}"></label><label>Shift <select id="shf">${SH.map((x,i)=>`<option value="${i}" ${S.shift==i?'selected':''}>${x}</option>`).join('')}</select></label></div></div>
+<div class="card"><h3>Share these settings</h3><div class="s">Copy this code. To reopen the same ER, put # and the code on the end of the page link, or paste it below.</div><div class="ctl"><input type="text" id="cd" value="${code()}" style="flex:1" aria-label="Settings code"><button class="btn" id="ld">Load code</button></div></div><div class="card" id="sr"></div>`;
+const sres=()=>{const a=stats(R.fifo),b=stats(R.smart);$('sr').innerHTML=`<h3>Result with these settings</h3>${P.length} patients arrived (${P.filter(p=>p.minor).length} fast-track, ${P.filter(p=>p.sick).length} seriously sick).<br>Sick patients wait ${a.sick.toFixed(1)} min with first come and ${b.sick.toFixed(1)} min with the risk score.`};
+const draw=()=>{stop();nav();const f=[board,results,pats,staffTab,many,fair,sett,clsTab][tab];$('app').innerHTML=f();if(tab==0)bb();if(tab==6)sres()};
+const open=id=>modal(id);
+document.addEventListener('click',e=>{const x=e.target,q=s=>x.closest(s);let c;
+if(c=q('[data-t]')){tab=+c.dataset.t;draw()}else if(c=q('[data-p]'))open(+c.dataset.p);else if(q('[data-close]')||x.id=='modal')$('modal').classList.remove('on');
+else if(c=q('[data-f]')){pf=c.dataset.f;draw()}else if(c=q('[data-sh]')){S.shift=+c.dataset.sh;go();draw()}
+else if(x.id=='rt')runMany();
+else if(x.id=='pl'){if(tm){stop();x.textContent='Play'}else{if(t>=S.hours*60-1)t=0;x.textContent='Pause';tm=setInterval(()=>{t=Math.min(t+spd,S.hours*60-1);bb();if(t>=S.hours*60-1){stop();$('pl').textContent='Play'}},350)}}
+else if(x.id=='ld'){const v=$('cd').value.trim().split('.').map(Number);if(v.length==K.length&&v.every(n=>!isNaN(n))){K.forEach((k,i)=>S[k]=v[i]);go();draw()}}});
+document.addEventListener('keydown',e=>{if(e.key=='Escape')$('modal').classList.remove('on');if((e.key=='Enter')&&e.target.dataset&&e.target.dataset.p)open(+e.target.dataset.p)});
+document.addEventListener('input',e=>{const x=e.target;if(x.id=='sc'){t=+x.value;bb()}else if(x.dataset.k){S[x.dataset.k]=+x.value;$('v_'+x.dataset.k).textContent=x.value;t=0;tests=null;go();$('cd').value=code();sres()}});
+document.addEventListener('change',e=>{const x=e.target;if(x.id=='md'){mode=x.value;bb()}else if(x.id=='sp')spd=+x.value;else if(x.id=='sd'){S.seed=Math.max(1,+x.value||7);tests=null;go();$('cd').value=code();sres()}else if(x.id=='shf'){S.shift=+x.value;$('cd').value=code();sres()}});
+try{const h=location.hash.slice(1).split('.').map(Number);if(h.length==K.length&&h.every(n=>!isNaN(n)))K.forEach((k,i)=>S[k]=h[i])}catch(e){}
+go();draw();
+})();
+</script></body></html>
